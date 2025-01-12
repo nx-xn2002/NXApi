@@ -13,7 +13,7 @@ import com.nx.nxapi.model.entity.PostFavour;
 import com.nx.nxapi.model.entity.User;
 import com.nx.nxapi.service.PostFavourService;
 import com.nx.nxapi.service.PostService;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

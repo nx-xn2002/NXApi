@@ -6,12 +6,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.nx.nxapi.model.dto.post.PostQueryRequest;
 import com.nx.nxapi.model.entity.Post;
 import com.nx.nxapi.model.vo.PostVO;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 帖子服务
- *
-
  */
 public interface PostService extends IService<Post> {
 
@@ -31,13 +29,6 @@ public interface PostService extends IService<Post> {
      */
     QueryWrapper<Post> getQueryWrapper(PostQueryRequest postQueryRequest);
 
-    /**
-     * 从 ES 查询
-     *
-     * @param postQueryRequest
-     * @return
-     */
-    Page<Post> searchFromEs(PostQueryRequest postQueryRequest);
 
     /**
      * 获取帖子封装
