@@ -1,7 +1,7 @@
 package com.nx.nxapi.mapper;
 
-import com.nx.nxapi.model.entity.ApiInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.nx.nxapi.model.entity.ApiInfo;
 
 /**
 * @author 18702
