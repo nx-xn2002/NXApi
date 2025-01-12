@@ -1,27 +1,23 @@
-package com.nx.nxapi.model.entity;
+package com.nx.nxapi.model.dto.apiinfo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.util.Date;
-
+import com.nx.nxapi.common.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
- * 接口信息表
+ * 查询请求
  *
  * @author nx-xn2002
  * @date 2025-01-12
  */
-@TableName(value = "api_info")
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class ApiInfo {
+public class ApiInfoQueryRequest extends PageRequest implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -63,20 +59,4 @@ public class ApiInfo {
      * 创建人id
      */
     private Long userId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 逻辑删除 默认 - 0
-     */
-    @TableLogic
-    private Integer isDeleted;
 }

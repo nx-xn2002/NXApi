@@ -11,5 +11,11 @@ import com.nx.nxapi.model.entity.ApiInfo;
  * @date 2025-01-12
  */
 public interface ApiInfoService extends IService<ApiInfo> {
-
+    /**
+     * 校验
+     *
+     * @param apiInfo api info
+     * @param add     add
+     */
+    void validApiInfo(ApiInfo apiInfo, boolean add);
 }

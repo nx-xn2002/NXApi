@@ -14,13 +14,13 @@ import com.nx.nxapi.model.vo.LoginUserVO;
 import com.nx.nxapi.model.vo.UserVO;
 import com.nx.nxapi.service.UserService;
 import com.nx.nxapi.utils.SqlUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,8 @@ import static com.nx.nxapi.constant.UserConstant.USER_LOGIN_STATE;
 /**
  * 用户服务实现
  *
-
+ * @author nx-xn2002
+ * @date 2025-01-12
  */
 @Service
 @Slf4j
