@@ -8,9 +8,7 @@ import com.nx.nxapi.common.ErrorCode;
 import com.nx.nxapi.constant.CommonConstant;
 import com.nx.nxapi.exception.BusinessException;
 import com.nx.nxapi.exception.ThrowUtils;
-import com.nx.nxapi.mapper.PostFavourMapper;
 import com.nx.nxapi.mapper.PostMapper;
-import com.nx.nxapi.mapper.PostThumbMapper;
 import com.nx.nxapi.model.dto.post.PostQueryRequest;
 import com.nx.nxapi.model.entity.Post;
 import com.nx.nxapi.model.entity.PostFavour;
@@ -36,6 +34,9 @@ import java.util.stream.Collectors;
 
 /**
  * 帖子服务实现
+ *
+ * @author nx-xn2002
+ * @date 2025-01-12
  */
 @Service
 @Slf4j
@@ -43,12 +44,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Resource
     private UserService userService;
-
-    @Resource
-    private PostThumbMapper postThumbMapper;
-
-    @Resource
-    private PostFavourMapper postFavourMapper;
 
 
     @Override
@@ -113,7 +108,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
 
-
     @Override
     public PostVO getPostVO(Post post, HttpServletRequest request) {
         PostVO postVO = PostVO.objToVo(post);
@@ -133,14 +127,10 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
             QueryWrapper<PostThumb> postThumbQueryWrapper = new QueryWrapper<>();
             postThumbQueryWrapper.in("postId", postId);
             postThumbQueryWrapper.eq("userId", loginUser.getId());
-            PostThumb postThumb = postThumbMapper.selectOne(postThumbQueryWrapper);
-            postVO.setHasThumb(postThumb != null);
             // 获取收藏
             QueryWrapper<PostFavour> postFavourQueryWrapper = new QueryWrapper<>();
             postFavourQueryWrapper.in("postId", postId);
             postFavourQueryWrapper.eq("userId", loginUser.getId());
-            PostFavour postFavour = postFavourMapper.selectOne(postFavourQueryWrapper);
-            postVO.setHasFavour(postFavour != null);
         }
         return postVO;
     }
@@ -167,14 +157,10 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
             QueryWrapper<PostThumb> postThumbQueryWrapper = new QueryWrapper<>();
             postThumbQueryWrapper.in("postId", postIdSet);
             postThumbQueryWrapper.eq("userId", loginUser.getId());
-            List<PostThumb> postPostThumbList = postThumbMapper.selectList(postThumbQueryWrapper);
-            postPostThumbList.forEach(postPostThumb -> postIdHasThumbMap.put(postPostThumb.getPostId(), true));
             // 获取收藏
             QueryWrapper<PostFavour> postFavourQueryWrapper = new QueryWrapper<>();
             postFavourQueryWrapper.in("postId", postIdSet);
             postFavourQueryWrapper.eq("userId", loginUser.getId());
-            List<PostFavour> postFavourList = postFavourMapper.selectList(postFavourQueryWrapper);
-            postFavourList.forEach(postFavour -> postIdHasFavourMap.put(postFavour.getPostId(), true));
         }
         // 填充信息
         List<PostVO> postVOList = postList.stream().map(post -> {
