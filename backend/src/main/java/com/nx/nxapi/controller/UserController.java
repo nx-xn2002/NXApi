@@ -65,9 +65,9 @@ public class UserController {
     /**
      * 用户登录
      *
-     * @param userLoginRequest
-     * @param request
-     * @return
+     * @param userLoginRequest user login request
+     * @param request          request
+     * @return {@link BaseResponse }<{@link LoginUserVO }>
      */
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,

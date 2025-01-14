@@ -106,6 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 3. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        log.info("user login success username[{}] userId[{}]", user.getUsername(), user.getId());
         return this.getLoginUserVO(user);
     }
 
@@ -191,7 +192,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return null;
         }
         LoginUserVO loginUserVO = new LoginUserVO();
-        BeanUtils.copyProperties(user, loginUserVO);
+        loginUserVO.setId(user.getId());
+        loginUserVO.setUserName(user.getUsername());
+        loginUserVO.setUserAvatar(user.getUserAvatar());
+        loginUserVO.setUserProfile(user.getUserProfile());
+        loginUserVO.setUserRole(user.getUserRole());
+        loginUserVO.setCreateTime(user.getCreateTime());
+        loginUserVO.setUpdateTime(user.getUpdateTime());
+//        BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
     }
 

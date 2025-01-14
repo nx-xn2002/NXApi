@@ -1,19 +1,17 @@
 package com.nx.nxapi.model.dto.user;
 
 import java.io.Serializable;
+
 import lombok.Data;
 
 /**
  * 用户登录请求
  *
-
+ * @author nx-xn2002
+ * @date 2025-01-15
  */
 @Data
 public class UserLoginRequest implements Serializable {
-
-    private static final long serialVersionUID = 3191241716373120793L;
-
     private String userAccount;
-
     private String userPassword;
 }
