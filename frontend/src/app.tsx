@@ -20,7 +20,8 @@ export async function getInitialState(): Promise<InitialState> {
       state.loginUser = res.data;
     }
   } catch (error) {
-    history.push(loginPath);
+    // history.push(loginPath);
+    state.loginUser = undefined;
   }
   return state;
 }
