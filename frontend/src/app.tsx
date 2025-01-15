@@ -8,12 +8,11 @@ import { requestConfig } from './requestConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-
+const state: InitialState = {
+  loginUser: undefined,
+};
 export async function getInitialState(): Promise<InitialState> {
   //当前页面首次加载的时候，获取全局保存的数据，比如用户登录信息
-  const state: InitialState = {
-    loginUser: undefined,
-  };
   try {
     const res = await getLoginUser();
     if (res.data) {
@@ -29,6 +28,7 @@ export async function getInitialState(): Promise<InitialState> {
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    logo: 'logo.png',
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
       src: initialState?.loginUser?.userAvatar,
