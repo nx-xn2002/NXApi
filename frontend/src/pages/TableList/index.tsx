@@ -13,7 +13,6 @@ import {
 } from '@ant-design/pro-components';
 import '@umijs/max';
 import { Button, Drawer, message } from 'antd';
-import type { SortOrder } from 'antd/lib/table/interface';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -211,7 +210,6 @@ const TableList: React.FC = () => {
           params: {
             pageSize?: number;
             current?: number;
-            // keyword?: string;
           },
           // sort: Record<string, SortOrder>,
           // filter: Record<string, (string | number)[] | null>,
@@ -224,12 +222,15 @@ const TableList: React.FC = () => {
               // ...filter,  // Optionally add filter params if needed
             },
           });
+
           if (res?.data) {
             return {
-              data: res?.data.records || [],
+              data: res.data.records || [],
               success: true,
-              total: res.data.total,
+              total: res.data.total || 0, // Ensure `total` is defined
             };
+          } else {
+            return { data: [], success: false, total: 0 }; // Ensure a valid response
           }
         }}
         columns={columns}
