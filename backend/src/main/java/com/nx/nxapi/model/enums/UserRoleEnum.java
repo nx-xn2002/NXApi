@@ -3,15 +3,22 @@ package com.nx.nxapi.model.enums;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * 用户角色枚举
  *
-
+ * @author nx-xn2002
+ * @date 2025-01-18
  */
+@Getter
 public enum UserRoleEnum {
 
+    /**
+     * user
+     */
     USER("用户", "user"),
     ADMIN("管理员", "admin"),
     BAN("被封号", "ban");
@@ -28,7 +35,7 @@ public enum UserRoleEnum {
     /**
      * 获取值列表
      *
-     * @return
+     * @return {@link List }<{@link String }>
      */
     public static List<String> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
@@ -37,8 +44,8 @@ public enum UserRoleEnum {
     /**
      * 根据 value 获取枚举
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return {@link UserRoleEnum }
      */
     public static UserRoleEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
@@ -52,11 +59,4 @@ public enum UserRoleEnum {
         return null;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
-    }
 }

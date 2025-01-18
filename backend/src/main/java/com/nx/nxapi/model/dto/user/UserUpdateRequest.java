@@ -1,12 +1,14 @@
 package com.nx.nxapi.model.dto.user;
 
 import java.io.Serializable;
+
 import lombok.Data;
 
 /**
  * 用户更新请求
  *
-
+ * @author nx-xn2002
+ * @date 2025-01-18
  */
 @Data
 public class UserUpdateRequest implements Serializable {
@@ -34,6 +36,4 @@ public class UserUpdateRequest implements Serializable {
      * 用户角色：user/admin/ban
      */
     private String userRole;
-
-    private static final long serialVersionUID = 1L;
 }
