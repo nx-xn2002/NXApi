@@ -8,19 +8,23 @@ const Settings: ProLayoutProps & {
   logo?: string;
 } = {
   navTheme: 'light',
-  // 拂晓蓝
-  colorPrimary: '#1890ff',
-  layout: 'mix',
+  // colorPrimary: '#1890ff',
+  colorPrimary: '#2F54EB',
+  // layout: 'mix',
+  layout: 'top',
   contentWidth: 'Fluid',
-  fixedHeader: false,
+  // fixedHeader: false,
+  fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
   title: 'NXApi',
   pwa: true,
   logo: 'logo.svg',
   iconfontUrl: '',
-  token: {
-  },
+  token: {},
+  //新增
+  siderMenuType: 'sub',
+  splitMenus: false,
 };
 
 export default Settings;
