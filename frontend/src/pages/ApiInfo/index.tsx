@@ -1,9 +1,10 @@
-import { addRule, removeRule, updateRule } from '@/services/ant-design-pro/api';
-import { listApiInfoByPage } from '@/services/nx-api-backend/apiInfoController';
-import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import CreateModal from '@/pages/ApiInfo/components/CreateModal';
+import UpdateModal from '@/pages/ApiInfo/components/UpdateModal';
+import {removeRule} from '@/services/ant-design-pro/api';
+import {addApiInfo, listApiInfoByPage, updateApiInfo,} from '@/services/nx-api-backend/apiInfoController';
+import {PlusOutlined} from '@ant-design/icons';
+import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
-  FooterToolbar,
   ModalForm,
   PageContainer,
   ProDescriptions,
@@ -12,55 +13,8 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, Drawer, message } from 'antd';
-import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from './components/UpdateForm';
-
-/**
- * @en-US Add node
- * @zh-CN 添加节点
- * @param fields
- */
-const handleAdd = async (fields: API.RuleListItem) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addRule({
-      ...fields,
-    });
-    hide();
-    message.success('Added successfully');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Adding failed, please try again!');
-    return false;
-  }
-};
-
-/**
- * @en-US Update node
- * @zh-CN 更新节点
- *
- * @param fields
- */
-const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('Configuring');
-  try {
-    await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
-    });
-    hide();
-    message.success('Configuration is successful');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Configuration failed, please try again!');
-    return false;
-  }
-};
+import {Button, Drawer, message} from 'antd';
+import React, {useRef, useState} from 'react';
 
 /**
  *  Delete node
@@ -97,9 +51,51 @@ const ApiInfo: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
-
+  const [currentRow, setCurrentRow] = useState<API.ApiInfo>();
+  const [selectedRowsState, setSelectedRows] = useState<API.ApiInfo[]>([]);
+  /**
+   * @en-US Add node
+   * @zh-CN 添加节点
+   * @param fields
+   */
+  const handleAdd = async (fields: API.ApiInfo) => {
+    const hide = message.loading('正在添加');
+    try {
+      await addApiInfo({
+        ...fields,
+      });
+      hide();
+      message.success('创建成功');
+      handleModalOpen(false);
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('创建失败，' + error.message);
+      return false;
+    }
+  };
+  /**
+   * @en-US Update node
+   * @zh-CN 更新节点
+   *
+   * @param fields
+   */
+  const handleUpdate = async (fields: API.ApiInfo) => {
+    const hide = message.loading('修改中...');
+    try {
+      await updateApiInfo({
+        ...fields,
+        id:currentRow?.id,
+      });
+      hide();
+      message.success('修改成功');
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('修改失败' + error.message);
+      return false;
+    }
+  };
   /**
    * @en-US International configuration
    * @zh-CN 国际化配置
@@ -115,6 +111,14 @@ const ApiInfo: React.FC = () => {
       title: '接口名称',
       dataIndex: 'name',
       valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '接口名称为必填项',
+          },
+        ],
+      },
     },
     {
       title: '描述',
@@ -125,11 +129,27 @@ const ApiInfo: React.FC = () => {
       title: '请求方法',
       dataIndex: 'method',
       valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '请求方法为必填项',
+          },
+        ],
+      },
     },
     {
       title: '接口地址',
       dataIndex: 'url',
       valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '接口地址为必填项',
+          },
+        ],
+      },
     },
     {
       title: '请求头',
@@ -160,11 +180,13 @@ const ApiInfo: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
+      hideInForm: true,
     },
     {
       title: '更新时间',
       dataIndex: 'updateTime',
       valueType: 'dateTime',
+      hideInForm: true,
     },
     {
       title: '操作',
@@ -178,10 +200,7 @@ const ApiInfo: React.FC = () => {
             setCurrentRow(record);
           }}
         >
-          配置
-        </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          订阅警报
+          修改
         </a>,
       ],
     },
@@ -240,37 +259,37 @@ const ApiInfo: React.FC = () => {
           },
         }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              项 &nbsp;&nbsp;
-              <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
-              </span>
-            </div>
-          }
-        >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
-          <Button type="primary">批量审批</Button>
-        </FooterToolbar>
-      )}
+      {/*{selectedRowsState?.length > 0 && (*/}
+      {/*  <FooterToolbar*/}
+      {/*    extra={*/}
+      {/*      <div>*/}
+      {/*        已选择{' '}*/}
+      {/*        <a*/}
+      {/*          style={{*/}
+      {/*            fontWeight: 600,*/}
+      {/*          }}*/}
+      {/*        >*/}
+      {/*          {selectedRowsState.length}*/}
+      {/*        </a>{' '}*/}
+      {/*        项 &nbsp;&nbsp;*/}
+      {/*        <span>*/}
+      {/*          服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万*/}
+      {/*        </span>*/}
+      {/*      </div>*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    <Button*/}
+      {/*      onClick={async () => {*/}
+      {/*        await handleRemove(selectedRowsState);*/}
+      {/*        setSelectedRows([]);*/}
+      {/*        actionRef.current?.reloadAndRest?.();*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      批量删除*/}
+      {/*    </Button>*/}
+      {/*    <Button type="primary">批量审批</Button>*/}
+      {/*  </FooterToolbar>*/}
+      {/*)}*/}
       <ModalForm
         title={'新建规则'}
         width="400px"
@@ -298,7 +317,7 @@ const ApiInfo: React.FC = () => {
         />
         <ProFormTextArea width="md" name="desc" />
       </ModalForm>
-      <UpdateForm
+      <UpdateModal
         onSubmit={async (value) => {
           const success = await handleUpdate(value);
           if (success) {
@@ -315,7 +334,8 @@ const ApiInfo: React.FC = () => {
             setCurrentRow(undefined);
           }
         }}
-        updateModalOpen={updateModalOpen}
+        columns={columns}
+        visible={updateModalOpen}
         values={currentRow || {}}
       />
 
@@ -342,6 +362,16 @@ const ApiInfo: React.FC = () => {
           />
         )}
       </Drawer>
+      <CreateModal
+        columns={columns}
+        onCancel={() => {
+          handleModalOpen(false);
+        }}
+        onSubmit={(values) => {
+          handleAdd(values);
+        }}
+        visible={createModalOpen}
+      />
     </PageContainer>
   );
 };
