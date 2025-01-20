@@ -1,43 +1,18 @@
 import CreateModal from '@/pages/ApiInfo/components/CreateModal';
 import UpdateModal from '@/pages/ApiInfo/components/UpdateModal';
-import {removeRule} from '@/services/ant-design-pro/api';
-import {addApiInfo, listApiInfoByPage, updateApiInfo,} from '@/services/nx-api-backend/apiInfoController';
-import {PlusOutlined} from '@ant-design/icons';
-import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
-  ModalForm,
-  PageContainer,
-  ProDescriptions,
-  ProFormText,
-  ProFormTextArea,
-  ProTable,
-} from '@ant-design/pro-components';
+  addApiInfo,
+  deleteApiInfo,
+  listApiInfoByPage,
+  updateApiInfo,
+} from '@/services/nx-api-backend/apiInfoController';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import {Button, Drawer, message} from 'antd';
-import React, {useRef, useState} from 'react';
+import { Button, Drawer, message, Modal } from 'antd';
+import React, { useRef, useState } from 'react';
 
-/**
- *  Delete node
- * @zh-CN 删除节点
- *
- * @param selectedRows
- */
-const handleRemove = async (selectedRows: API.RuleListItem[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await removeRule({
-      key: selectedRows.map((row) => row.key),
-    });
-    hide();
-    message.success('Deleted successfully and will refresh soon');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Delete failed, please try again');
-    return false;
-  }
-};
 const ApiInfo: React.FC = () => {
   /**
    * @en-US Pop-up window of new window
@@ -52,13 +27,12 @@ const ApiInfo: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.ApiInfo>();
-  const [selectedRowsState, setSelectedRows] = useState<API.ApiInfo[]>([]);
   /**
    * @en-US Add node
    * @zh-CN 添加节点
    * @param fields
    */
-  const handleAdd = async (fields: API.ApiInfo) => {
+  const handleAdd = async (fields: API.ApiInfo): Promise<void> => {
     const hide = message.loading('正在添加');
     try {
       await addApiInfo({
@@ -66,14 +40,14 @@ const ApiInfo: React.FC = () => {
       });
       hide();
       message.success('创建成功');
+      actionRef.current?.reload();
       handleModalOpen(false);
-      return true;
     } catch (error: any) {
       hide();
       message.error('创建失败，' + error.message);
-      return false;
     }
   };
+
   /**
    * @en-US Update node
    * @zh-CN 更新节点
@@ -85,21 +59,54 @@ const ApiInfo: React.FC = () => {
     try {
       await updateApiInfo({
         ...fields,
-        id:currentRow?.id,
+        id: currentRow?.id,
       });
       hide();
       message.success('修改成功');
+      actionRef.current?.reload();
       return true;
     } catch (error: any) {
       hide();
-      message.error('修改失败' + error.message);
+      message.error('修改失败, ' + error.message);
       return false;
     }
   };
   /**
-   * @en-US International configuration
-   * @zh-CN 国际化配置
-   * */
+   *  Delete node
+   * @zh-CN 删除节点
+   *
+   * @param record
+   */
+  const handleRemove = async (record: API.ApiInfo) => {
+    if (!record) return true;
+
+    Modal.confirm({
+      title: '确定要删除吗?',
+      content: `你确定要删除接口[${record.name}]吗?`,
+      onOk: async () => {
+        const hide = message.loading('正在删除');
+        try {
+          // 执行删除操作
+          await deleteApiInfo({
+            id: record.id,
+          });
+          hide();
+          message.success('删除成功');
+          // 刷新表格数据
+          actionRef.current?.reload();
+          return true;
+        } catch (error: any) {
+          hide();
+          message.error('删除失败，' + error.message);
+          return false;
+        }
+      },
+      onCancel() {
+        // 用户点击取消时的逻辑
+        console.log('取消删除');
+      },
+    });
+  };
 
   const columns: ProColumns<API.ApiInfo>[] = [
     {
@@ -202,6 +209,15 @@ const ApiInfo: React.FC = () => {
         >
           修改
         </a>,
+        <a
+          key="config"
+          onClick={() => {
+            setCurrentRow(record);
+            handleRemove(record);
+          }}
+        >
+          删除
+        </a>,
       ],
     },
   ];
@@ -253,11 +269,11 @@ const ApiInfo: React.FC = () => {
           }
         }}
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
+        // rowSelection={{
+        //   onChange: (_, selectedRows) => {
+        //     setSelectedRows(selectedRows);
+        //   },
+        // }}
       />
       {/*{selectedRowsState?.length > 0 && (*/}
       {/*  <FooterToolbar*/}
@@ -290,33 +306,33 @@ const ApiInfo: React.FC = () => {
       {/*    <Button type="primary">批量审批</Button>*/}
       {/*  </FooterToolbar>*/}
       {/*)}*/}
-      <ModalForm
-        title={'新建规则'}
-        width="400px"
-        open={createModalOpen}
-        onOpenChange={handleModalOpen}
-        onFinish={async (value) => {
-          const success = await handleAdd(value as API.RuleListItem);
-          if (success) {
-            handleModalOpen(false);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-      >
-        <ProFormText
-          rules={[
-            {
-              required: true,
-              message: '规则名称为必填项',
-            },
-          ]}
-          width="md"
-          name="name"
-        />
-        <ProFormTextArea width="md" name="desc" />
-      </ModalForm>
+      {/*<ModalForm*/}
+      {/*  title={'新建规则'}*/}
+      {/*  width="400px"*/}
+      {/*  open={createModalOpen}*/}
+      {/*  onOpenChange={handleModalOpen}*/}
+      {/*  onFinish={async (value) => {*/}
+      {/*    const success = await handleAdd(value as API.RuleListItem);*/}
+      {/*    if (success) {*/}
+      {/*      handleModalOpen(false);*/}
+      {/*      if (actionRef.current) {*/}
+      {/*        actionRef.current.reload();*/}
+      {/*      }*/}
+      {/*    }*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <ProFormText*/}
+      {/*    rules={[*/}
+      {/*      {*/}
+      {/*        required: true,*/}
+      {/*        message: '规则名称为必填项',*/}
+      {/*      },*/}
+      {/*    ]}*/}
+      {/*    width="md"*/}
+      {/*    name="name"*/}
+      {/*  />*/}
+      {/*  <ProFormTextArea width="md" name="desc" />*/}
+      {/*</ModalForm>*/}
       <UpdateModal
         onSubmit={async (value) => {
           const success = await handleUpdate(value);
@@ -367,9 +383,7 @@ const ApiInfo: React.FC = () => {
         onCancel={() => {
           handleModalOpen(false);
         }}
-        onSubmit={(values) => {
-          handleAdd(values);
-        }}
+        onSubmit={(values: API.ApiInfo) => handleAdd(values)}
         visible={createModalOpen}
       />
     </PageContainer>
