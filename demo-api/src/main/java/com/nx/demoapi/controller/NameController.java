@@ -1,14 +1,9 @@
 package com.nx.demoapi.controller;
 
-import cn.hutool.crypto.digest.DigestAlgorithm;
-import cn.hutool.crypto.digest.Digester;
-import cn.hutool.json.JSONUtil;
-import com.nx.demoapi.model.User;
-import com.nx.demoapi.utils.SignUtils;
+import com.nx.demoapisdk.model.User;
+import com.nx.demoapisdk.utils.SignUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * 查询名称接口

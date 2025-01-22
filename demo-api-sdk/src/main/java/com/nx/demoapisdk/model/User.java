@@ -1,4 +1,4 @@
-package com.nx.demoapi.model;
+package com.nx.demoapisdk.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

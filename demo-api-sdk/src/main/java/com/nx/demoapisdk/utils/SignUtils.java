@@ -1,10 +1,8 @@
-package com.nx.demoapi.utils;
+package com.nx.demoapisdk.utils;
 
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
 import cn.hutool.json.JSONUtil;
-
-import java.util.Map;
 
 /**
  * 签名工具类

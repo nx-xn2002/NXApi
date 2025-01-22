@@ -1,12 +1,12 @@
-package com.nx.demoapi.client;
+package com.nx.demoapisdk.client;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.nx.demoapi.model.User;
-import com.nx.demoapi.utils.SignUtils;
+import com.nx.demoapisdk.model.User;
+import com.nx.demoapisdk.utils.SignUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +21,11 @@ public class DemoApiClient {
     /**
      * access key
      */
-    private String accessKey;
+    private final String accessKey;
     /**
      * secret key
      */
-    private String secretKey;
+    private final String secretKey;
 
     public DemoApiClient(String accessKey, String secretKey) {
         this.accessKey = accessKey;

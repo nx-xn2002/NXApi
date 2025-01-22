@@ -1,7 +1,8 @@
 package com.nx.demoapi;
 
-import com.nx.demoapi.client.DemoApiClient;
-import com.nx.demoapi.model.User;
+
+import com.nx.demoapisdk.client.DemoApiClient;
+import com.nx.demoapisdk.model.User;
 
 /**
  * main

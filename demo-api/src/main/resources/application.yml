@@ -6,3 +6,8 @@ server:
   port: 8102
   servlet:
     context-path: /api
+
+demo:
+  api:
+    access-key: 123456
+    secret-key: 123456
