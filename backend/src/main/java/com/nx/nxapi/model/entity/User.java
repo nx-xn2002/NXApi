@@ -2,19 +2,15 @@ package com.nx.nxapi.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 用户
- *
- * @author nx-xn2002
- * @date 2025-01-12
+ * @TableName user
  */
-@TableName(value = "user")
+@TableName(value ="user")
 @Data
 public class User {
     /**
@@ -37,6 +33,16 @@ public class User {
      * 用户昵称
      */
     private String username;
+
+    /**
+     * accessKey
+     */
+    private String accessKey;
+
+    /**
+     * secretKey
+     */
+    private String secretKey;
 
     /**
      * 用户头像
@@ -66,6 +72,5 @@ public class User {
     /**
      * 是否删除
      */
-    @TableLogic
     private Integer isDeleted;
 }

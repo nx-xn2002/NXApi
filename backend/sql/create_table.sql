@@ -30,6 +30,8 @@ create table if not exists user
     account      varchar(256)                           not null comment '账号',
     password     varchar(512)                           not null comment '密码',
     username     varchar(256)                           null comment '用户昵称',
+    access_key   varchar(512)                           not null comment 'accessKey',
+    secret_key   varchar(512)                           not null comment 'secretKey',
     user_avatar  varchar(1024)                          null comment '用户头像',
     user_profile varchar(512)                           null comment '用户简介',
     user_role    varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
