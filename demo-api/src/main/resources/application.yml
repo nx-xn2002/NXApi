@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: demo-api
+
+server:
+  port: 8102
+  servlet:
+    context-path: /api
