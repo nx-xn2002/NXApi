@@ -1,5 +1,6 @@
-package com.nx.nxapiapi.model;
+package com.nx.demoapi.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@AllArgsConstructor
 public class User {
     private String name;
 }

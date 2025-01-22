@@ -1,4 +1,4 @@
-package com.nx.nxapiapi;
+package com.nx.demoapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2025-01-20
  */
 @SpringBootApplication
-public class NxApiApiApplication {
+public class DemoApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NxApiApiApplication.class, args);
+        SpringApplication.run(DemoApiApplication.class, args);
     }
 
 }
