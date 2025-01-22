@@ -8,11 +8,13 @@ import lombok.Data;
  * 用户
  *
  * @author nx-xn2002
- * @date 2025-01-20
  */
 @Data
 @Builder
 @AllArgsConstructor
 public class User {
+    /**
+     * name
+     */
     private String name;
 }

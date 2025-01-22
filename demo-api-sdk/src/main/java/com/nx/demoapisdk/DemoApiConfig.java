@@ -11,16 +11,26 @@ import org.springframework.context.annotation.Configuration;
  * demo api configuration
  *
  * @author nx-xn2002
- * @date 2025-01-22
  */
 @Configuration
 @ConfigurationProperties("demo.api")
 @Data
 @ComponentScan
 public class DemoApiConfig {
+    /**
+     * access key
+     */
     private String accessKey;
+    /**
+     * secret key
+     */
     private String secretKey;
 
+    /**
+     * demo api client
+     *
+     * @return {@link DemoApiClient }
+     */
     @Bean
     public DemoApiClient demoApiClient() {
         return new DemoApiClient(accessKey, secretKey);

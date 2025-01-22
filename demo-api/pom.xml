@@ -58,7 +58,7 @@
             <version>5.8.35</version>
         </dependency>
         <dependency>
-            <groupId>com.nx</groupId>
+            <groupId>io.github.nx-xn2002</groupId>
             <artifactId>demo-api-sdk</artifactId>
             <version>1.0.0</version>
         </dependency>

@@ -15,7 +15,6 @@ import java.util.Map;
  * 调用第三方接口的客户端
  *
  * @author nx-xn2002
- * @date 2025-01-20
  */
 public class DemoApiClient {
     /**
@@ -27,6 +26,12 @@ public class DemoApiClient {
      */
     private final String secretKey;
 
+    /**
+     * demo api client
+     *
+     * @param accessKey access key
+     * @param secretKey secret key
+     */
     public DemoApiClient(String accessKey, String secretKey) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
@@ -34,6 +39,12 @@ public class DemoApiClient {
 
     private final static String URL = "http://localhost:8102/api/name/";
 
+    /**
+     * get name by get
+     *
+     * @param name name
+     * @return {@link String }
+     */
     public String getNameByGet(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
@@ -42,6 +53,12 @@ public class DemoApiClient {
         return result;
     }
 
+    /**
+     * get name by post
+     *
+     * @param name name
+     * @return {@link String }
+     */
     public String getNameByPost(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
@@ -50,6 +67,12 @@ public class DemoApiClient {
         return result;
     }
 
+    /**
+     * get user name by post
+     *
+     * @param user user
+     * @return {@link String }
+     */
     public String getUserNameByPost(User user) {
         String json = JSONUtil.toJsonStr(user);
         System.out.println(json);
@@ -63,6 +86,12 @@ public class DemoApiClient {
         return result;
     }
 
+    /**
+     * get header map
+     *
+     * @param body body
+     * @return {@link Map }<{@link String }, {@link String }>
+     */
     private Map<String, String> getHeaderMap(String body) {
         HashMap<String, String> hashMap = new HashMap<>(16);
         hashMap.put("accessKey", accessKey);
