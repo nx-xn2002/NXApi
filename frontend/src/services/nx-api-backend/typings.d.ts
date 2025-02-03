@@ -126,6 +126,10 @@ declare namespace API {
     id: number;
   };
 
+  type IdRequest = {
+    id?: number;
+  };
+
   type listApiInfoByPageParams = {
     apiInfoQueryRequest: ApiInfoQueryRequest;
   };
@@ -193,17 +197,17 @@ declare namespace API {
 
   type User = {
     id?: number;
-    userAccount?: string;
-    userPassword?: string;
-    unionId?: string;
-    mpOpenId?: string;
-    userName?: string;
+    account?: string;
+    password?: string;
+    username?: string;
+    accessKey?: string;
+    secretKey?: string;
     userAvatar?: string;
     userProfile?: string;
     userRole?: string;
     createTime?: string;
     updateTime?: string;
-    isDelete?: number;
+    isDeleted?: number;
   };
 
   type UserAddRequest = {

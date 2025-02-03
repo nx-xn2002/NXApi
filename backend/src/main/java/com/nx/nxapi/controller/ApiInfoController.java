@@ -2,11 +2,9 @@ package com.nx.nxapi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.nx.demoapisdk.client.DemoApiClient;
 import com.nx.nxapi.annotation.AuthCheck;
-import com.nx.nxapi.common.BaseResponse;
-import com.nx.nxapi.common.DeleteRequest;
-import com.nx.nxapi.common.ErrorCode;
-import com.nx.nxapi.common.ResultUtils;
+import com.nx.nxapi.common.*;
 import com.nx.nxapi.constant.CommonConstant;
 import com.nx.nxapi.exception.BusinessException;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoAddRequest;
@@ -25,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.nx.nxapi.model.enums.ApiInfoStatusEnum.OFFLINE;
+import static com.nx.nxapi.model.enums.ApiInfoStatusEnum.ONLINE;
+
 /**
  * api info controller
  *
@@ -41,6 +42,9 @@ public class ApiInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private DemoApiClient demoApiClient;
 
     /**
      * 创建
@@ -194,4 +198,61 @@ public class ApiInfoController {
         return ResultUtils.success(apiInfoPage);
     }
 
+    /**
+     * 发布接口
+     *
+     * @param idRequest id request
+     * @param request   request
+     * @return {@link BaseResponse }<{@link Boolean }>
+     */
+    @PostMapping("/online")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> onlineApiInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //校验接口是否存在
+        Long id = idRequest.getId();
+        ApiInfo oldApiInfo = apiInfoService.getById(id);
+        if (oldApiInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        //判断是否可以调用
+        com.nx.demoapisdk.model.User user = new com.nx.demoapisdk.model.User("test");
+        String response = demoApiClient.getUserNameByPost(user);
+        if (StringUtils.isBlank(response)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口失效");
+        }
+        ApiInfo newApiInfo = new ApiInfo();
+        newApiInfo.setId(id);
+        newApiInfo.setStatus(ONLINE.getValue());
+        boolean result = apiInfoService.updateById(newApiInfo);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 下线接口
+     *
+     * @param idRequest id request
+     * @param request   request
+     * @return {@link BaseResponse }<{@link Boolean }>
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> offlineApiInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //校验接口是否存在
+        Long id = idRequest.getId();
+        ApiInfo oldApiInfo = apiInfoService.getById(id);
+        if (oldApiInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        ApiInfo newApiInfo = new ApiInfo();
+        newApiInfo.setId(id);
+        newApiInfo.setStatus(OFFLINE.getValue());
+        boolean result = apiInfoService.updateById(newApiInfo);
+        return ResultUtils.success(result);
+    }
 }

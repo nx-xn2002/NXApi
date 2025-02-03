@@ -1,9 +1,11 @@
-import CreateModal from '@/pages/ApiInfo/components/CreateModal';
-import UpdateModal from '@/pages/ApiInfo/components/UpdateModal';
+import CreateModal from '@/pages/Admin/ApiInfo/components/CreateModal';
+import UpdateModal from '@/pages/Admin/ApiInfo/components/UpdateModal';
 import {
   addApiInfo,
   deleteApiInfo,
   listApiInfoByPage,
+  offlineApiInfo,
+  onlineApiInfo,
   updateApiInfo,
 } from '@/services/nx-api-backend/apiInfoController';
 import { PlusOutlined } from '@ant-design/icons';
@@ -107,6 +109,74 @@ const ApiInfo: React.FC = () => {
       },
     });
   };
+  /**
+   * 发布接口
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.ApiInfo) => {
+    if (!record) return true;
+    Modal.confirm({
+      title: '确定要上线吗?',
+      content: `你确定要上线接口[${record.name}]吗?`,
+      onOk: async () => {
+        const hide = message.loading('发布中');
+        try {
+          // 执行删除操作
+          await onlineApiInfo({
+            id: record.id,
+          });
+          hide();
+          message.success('发布成功');
+          // 刷新表格数据
+          actionRef.current?.reload();
+          return true;
+        } catch (error: any) {
+          hide();
+          message.error('发布失败，' + error.message);
+          return false;
+        }
+      },
+      onCancel() {
+        // 用户点击取消时的逻辑
+        console.log('取消发布');
+      },
+    });
+  };
+  /**
+   * 下线接口
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.ApiInfo) => {
+    if (!record) return true;
+    Modal.confirm({
+      title: '确定要下线吗?',
+      content: `你确定要下线接口[${record.name}]吗?`,
+      onOk: async () => {
+        const hide = message.loading('下线中');
+        try {
+          // 执行删除操作
+          await offlineApiInfo({
+            id: record.id,
+          });
+          hide();
+          message.success('下线成功');
+          // 刷新表格数据
+          actionRef.current?.reload();
+          return true;
+        } catch (error: any) {
+          hide();
+          message.error('下线失败，' + error.message);
+          return false;
+        }
+      },
+      onCancel() {
+        // 用户点击取消时的逻辑
+        console.log('取消下线');
+      },
+    });
+  };
 
   const columns: ProColumns<API.ApiInfo>[] = [
     {
@@ -178,17 +248,17 @@ const ApiInfo: React.FC = () => {
           status: 'Default',
         },
         1: {
-          text: '关闭',
+          text: '在线',
           status: 'Processing',
         },
       },
     },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      valueType: 'dateTime',
-      hideInForm: true,
-    },
+    // {
+    //   title: '创建时间',
+    //   dataIndex: 'createTime',
+    //   valueType: 'dateTime',
+    //   hideInForm: true,
+    // },
     {
       title: '更新时间',
       dataIndex: 'updateTime',
@@ -200,24 +270,43 @@ const ApiInfo: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <a
+        <Button
+          color="primary"
+          variant="filled"
           key="config"
           onClick={() => {
-            handleUpdateModalOpen(true);
             setCurrentRow(record);
+            handleUpdateModalOpen(true);
           }}
         >
           修改
-        </a>,
-        <a
+        </Button>,
+        (record.status === 0 || record.status === 1) && (
+          <Button
+            color={record.status === 0 ? "cyan" : "purple"}
+            variant="filled"
+            key="config"
+            onClick={() => {
+              if (record.status === 0) {
+                handleOnline(record);  // 发布
+              } else if (record.status === 1) {
+                handleOffline(record);  // 下线
+              }
+            }}
+          >
+            {record.status === 0 ? '发布' : '下线'}
+          </Button>
+        ),
+        <Button
+          color="danger"
+          variant="filled"
           key="config"
           onClick={() => {
-            setCurrentRow(record);
             handleRemove(record);
           }}
         >
           删除
-        </a>,
+        </Button>,
       ],
     },
   ];

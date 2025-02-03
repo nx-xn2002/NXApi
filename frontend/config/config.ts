@@ -139,6 +139,11 @@ export default defineConfig({
       schemaPath: 'https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json',
       projectName: 'swagger',
     },
+    {
+      requestLibPath: "import { request } from '@umijs/max'",
+      schemaPath: 'http://localhost:8101/api/v3/api-docs/default',
+      projectName: 'nx-api-backend',
+    },
   ],
   mfsu: {
     strategy: 'normal',

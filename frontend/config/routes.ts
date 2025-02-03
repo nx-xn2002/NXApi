@@ -11,9 +11,8 @@ export default [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { name: '接口管理', icon: 'table', path: '/admin/api', component: './ApiInfo' },
+      { name: '接口管理', icon: 'table', path: '/admin/api', component: './Admin/ApiInfo' },
       { path: '/admin', redirect: '/admin/sub-page' },
-      { path: '/admin/sub-page', name: '二级管理页', component: './Admin' },
     ],
   },
   // { path: '/', redirect: '/welcome' },
