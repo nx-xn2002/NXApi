@@ -3,11 +3,11 @@ package com.nx.nxapi.controller;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.xiaoymin.knife4j.core.enums.ApiRuleEnums;
 import com.nx.demoapisdk.client.DemoApiClient;
 import com.nx.nxapi.annotation.AuthCheck;
 import com.nx.nxapi.common.*;
 import com.nx.nxapi.constant.CommonConstant;
+import com.nx.nxapi.constant.UserConstant;
 import com.nx.nxapi.exception.BusinessException;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoAddRequest;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoInvokeRequest;
@@ -15,7 +15,6 @@ import com.nx.nxapi.model.dto.apiinfo.ApiInfoQueryRequest;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoUpdateRequest;
 import com.nx.nxapi.model.entity.ApiInfo;
 import com.nx.nxapi.model.entity.User;
-import com.nx.nxapi.model.enums.ApiInfoStatusEnum;
 import com.nx.nxapi.service.ApiInfoService;
 import com.nx.nxapi.service.UserService;
 import jakarta.annotation.Resource;
@@ -240,7 +239,7 @@ public class ApiInfoController {
      * @return {@link BaseResponse }<{@link Boolean }>
      */
     @PostMapping("/offline")
-    @AuthCheck(mustRole = "admin")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> offlineApiInfo(@RequestBody IdRequest idRequest) {
         if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
