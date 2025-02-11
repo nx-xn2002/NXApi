@@ -1,6 +1,6 @@
-import { getApiInfoById } from '@/services/nx-api-backend/apiInfoController';
+import { getApiInfoById, invokeApiInfo } from '@/services/nx-api-backend/apiInfoController';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Descriptions, Form, Input, message } from 'antd';
+import { Button, Card, Descriptions, Divider, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 
@@ -10,7 +10,9 @@ import { useParams } from 'react-router';
  */
 const Index: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const [invokeLoading, setInvokeLoading] = useState(false);
   const [data, setData] = useState<API.ApiInfo>();
+  const [invokeRes, setInvokeRes] = useState<any>();
   const params = useParams();
   const loadData = async () => {
     if (!params.id) {
@@ -27,8 +29,25 @@ const Index: React.FC = () => {
       setLoading(false);
     }
   };
-  const onFinish = () => {
-    console.log('Success');
+  const onFinish = async (values: any) => {
+    if (!params.id) {
+      message.error('接口不存在');
+      return;
+    }
+    setInvokeLoading(true);
+    try {
+      const res = await invokeApiInfo({
+        id: Number(params.id),
+        userRequestParams: values.userRequestParams,
+      });
+      setInvokeRes(res.data);
+      message.success('调用成功');
+      return;
+    } catch (e: any) {
+      message.error('调用失败', e.message);
+    } finally {
+      setInvokeLoading(false);
+    }
   };
 
   const onFinishFailed = () => {
@@ -58,17 +77,22 @@ const Index: React.FC = () => {
           <div>接口不存在</div>
         )}
       </Card>
-      <Card>
+      <Divider />
+      <Card title={'在线测试'}>
         <Form name="Invoke" onFinish={onFinish} onFinishFailed={onFinishFailed} layout={'vertical'}>
-          <Form.Item label="请求参数" name="requestParams">
+          <Form.Item label="请求参数" name="userRequestParams">
             <Input.TextArea />
           </Form.Item>
           <Form.Item label={null}>
-            <Button type="primary" htmlType="submit">
+            <Button loading={invokeLoading} type="primary" htmlType="submit">
               调用
             </Button>
           </Form.Item>
         </Form>
+      </Card>
+      <Divider />
+      <Card loading={invokeLoading} title={'调用结果'}>
+        {invokeRes}
       </Card>
     </PageContainer>
   );

@@ -25,6 +25,11 @@ declare namespace API {
     method?: string;
   };
 
+  type ApiInfoInvokeRequest = {
+    id?: number;
+    userRequestParams?: string;
+  };
+
   type ApiInfoQueryRequest = {
     current?: number;
     pageSize?: number;
@@ -81,6 +86,12 @@ declare namespace API {
   type BaseResponseLong = {
     code?: number;
     data?: number;
+    message?: string;
+  };
+
+  type BaseResponseObject = {
+    code?: number;
+    data?: Record<string, any>;
     message?: string;
   };
 

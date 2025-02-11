@@ -1,17 +1,21 @@
 package com.nx.nxapi.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.core.enums.ApiRuleEnums;
 import com.nx.demoapisdk.client.DemoApiClient;
 import com.nx.nxapi.annotation.AuthCheck;
 import com.nx.nxapi.common.*;
 import com.nx.nxapi.constant.CommonConstant;
 import com.nx.nxapi.exception.BusinessException;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoAddRequest;
+import com.nx.nxapi.model.dto.apiinfo.ApiInfoInvokeRequest;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoQueryRequest;
 import com.nx.nxapi.model.dto.apiinfo.ApiInfoUpdateRequest;
 import com.nx.nxapi.model.entity.ApiInfo;
 import com.nx.nxapi.model.entity.User;
+import com.nx.nxapi.model.enums.ApiInfoStatusEnum;
 import com.nx.nxapi.service.ApiInfoService;
 import com.nx.nxapi.service.UserService;
 import jakarta.annotation.Resource;
@@ -202,12 +206,11 @@ public class ApiInfoController {
      * 发布接口
      *
      * @param idRequest id request
-     * @param request   request
      * @return {@link BaseResponse }<{@link Boolean }>
      */
     @PostMapping("/online")
     @AuthCheck(mustRole = "admin")
-    public BaseResponse<Boolean> onlineApiInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> onlineApiInfo(@RequestBody IdRequest idRequest) {
         if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -234,12 +237,11 @@ public class ApiInfoController {
      * 下线接口
      *
      * @param idRequest id request
-     * @param request   request
      * @return {@link BaseResponse }<{@link Boolean }>
      */
     @PostMapping("/offline")
     @AuthCheck(mustRole = "admin")
-    public BaseResponse<Boolean> offlineApiInfo(@RequestBody IdRequest idRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> offlineApiInfo(@RequestBody IdRequest idRequest) {
         if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -254,5 +256,38 @@ public class ApiInfoController {
         newApiInfo.setStatus(OFFLINE.getValue());
         boolean result = apiInfoService.updateById(newApiInfo);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 测试调用
+     *
+     * @param apiInfoInvokeRequest api info invoke request
+     * @param request              request
+     * @return {@link BaseResponse }<{@link Boolean }>
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeApiInfo(@RequestBody ApiInfoInvokeRequest apiInfoInvokeRequest,
+                                              HttpServletRequest request) {
+        if (apiInfoInvokeRequest == null || apiInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = apiInfoInvokeRequest.getId();
+        String userRequestParams = apiInfoInvokeRequest.getUserRequestParams();
+        //判断接口是否存在
+        ApiInfo oldApiInfo = apiInfoService.getById(id);
+        if (oldApiInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        if (!oldApiInfo.getStatus().equals(ONLINE.getValue())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
+        }
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        com.nx.demoapisdk.model.User user = JSONUtil.toBean(apiInfoInvokeRequest.getUserRequestParams(),
+                com.nx.demoapisdk.model.User.class);
+        DemoApiClient apiClient = new DemoApiClient(accessKey, secretKey);
+        String userNameByPost = apiClient.getUserNameByPost(user);
+        return ResultUtils.success(userNameByPost);
     }
 }
