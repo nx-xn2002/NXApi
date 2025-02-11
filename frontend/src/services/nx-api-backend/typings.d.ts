@@ -4,6 +4,7 @@ declare namespace API {
     name?: string;
     description?: string;
     url?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     status?: number;
@@ -18,6 +19,7 @@ declare namespace API {
     name?: string;
     description?: string;
     url?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     method?: string;
@@ -32,6 +34,7 @@ declare namespace API {
     name?: string;
     description?: string;
     url?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     status?: number;
@@ -44,6 +47,7 @@ declare namespace API {
     name?: string;
     description?: string;
     url?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     status?: number;

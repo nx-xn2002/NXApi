@@ -8,7 +8,6 @@ import java.io.Serializable;
  * 更新请求
  *
  * @author nx-xn2002
- * @date 2025-01-12
  */
 @Data
 public class ApiInfoUpdateRequest implements Serializable {
@@ -31,6 +30,10 @@ public class ApiInfoUpdateRequest implements Serializable {
      * 接口地址
      */
     private String url;
+    /**
+     * 请求参数
+     */
+    private String requestParams;
 
     /**
      * 请求头

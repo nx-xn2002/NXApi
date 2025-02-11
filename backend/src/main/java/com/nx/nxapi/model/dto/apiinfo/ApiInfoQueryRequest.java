@@ -10,7 +10,6 @@ import java.io.Serializable;
  * 查询请求
  *
  * @author nx-xn2002
- * @date 2025-01-12
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -34,7 +33,10 @@ public class ApiInfoQueryRequest extends PageRequest implements Serializable {
      * 接口地址
      */
     private String url;
-
+    /**
+     * 请求参数
+     */
+    private String requestParams;
     /**
      * 请求头
      */

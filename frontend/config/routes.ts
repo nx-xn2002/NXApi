@@ -1,6 +1,13 @@
 export default [
   { path: '/', name: '主页', icon: 'smile', component: './Index' },
   {
+    path: '/api_info/:id',
+    name: '查看接口信息',
+    icon: 'smile',
+    component: './ApiInfo',
+    hideInMenu: true,
+  },
+  {
     path: '/user',
     layout: false,
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],

@@ -229,14 +229,19 @@ const ApiInfo: React.FC = () => {
       },
     },
     {
+      title: '请求参数',
+      dataIndex: 'requestParams',
+      valueType: 'jsonCode',
+    },
+    {
       title: '请求头',
       dataIndex: 'requestHeader',
-      valueType: 'textarea',
+      valueType: 'jsonCode',
     },
     {
       title: '响应头',
       dataIndex: 'responseHeader',
-      valueType: 'textarea',
+      valueType: 'jsonCode',
     },
     {
       title: '接口状态',
@@ -283,14 +288,14 @@ const ApiInfo: React.FC = () => {
         </Button>,
         (record.status === 0 || record.status === 1) && (
           <Button
-            color={record.status === 0 ? "cyan" : "purple"}
+            color={record.status === 0 ? 'cyan' : 'purple'}
             variant="filled"
             key="config"
             onClick={() => {
               if (record.status === 0) {
-                handleOnline(record);  // 发布
+                handleOnline(record); // 发布
               } else if (record.status === 1) {
-                handleOffline(record);  // 下线
+                handleOffline(record); // 下线
               }
             }}
           >

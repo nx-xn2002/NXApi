@@ -1,6 +1,8 @@
 package com.nx.nxapi.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nx.nxapi.common.ErrorCode;
@@ -74,9 +76,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUsername(userAccount);
             user.setPassword(encryptPassword);
             user.setUserAvatar("/images/default_avatar.png");
-            //TODO:创建生成算法
-            user.setAccessKey("123456");
-            user.setSecretKey("123456");
+            //4.生成随机的 accessKey 和 secretKey
+            user.setAccessKey(DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(5)));
+            user.setSecretKey(DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(8)));
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
