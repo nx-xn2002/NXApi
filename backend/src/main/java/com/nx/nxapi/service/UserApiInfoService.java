@@ -16,4 +16,13 @@ public interface UserApiInfoService extends IService<UserApiInfo> {
      * @param add         add
      */
     void validUserApiInfo(UserApiInfo userApiInfo, boolean add);
+
+    /**
+     * 调用接口统计
+     *
+     * @param apiInfoId api info id
+     * @param userId    user id
+     * @return boolean
+     */
+    boolean invokeCount(long apiInfoId, long userId);
 }

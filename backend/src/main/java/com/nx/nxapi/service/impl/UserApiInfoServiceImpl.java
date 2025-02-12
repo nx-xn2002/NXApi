@@ -1,5 +1,6 @@
 package com.nx.nxapi.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nx.nxapi.common.ErrorCode;
 import com.nx.nxapi.exception.BusinessException;
@@ -30,6 +31,20 @@ public class UserApiInfoServiceImpl extends ServiceImpl<UserApiInfoMapper, UserA
         if (userApiInfo.getLeftNum() < 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的调用次数");
         }
+    }
+
+    @Override
+    public boolean invokeCount(long apiInfoId, long userId) {
+        //校验
+        if (apiInfoId <= 0 || userId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        UpdateWrapper<UserApiInfo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("api_info_id", apiInfoId);
+        updateWrapper.eq("user_id", userId);
+        updateWrapper.gt("left_num", 0);
+        updateWrapper.setSql("left_num = left_num - 1, total_num = total_num + 1");
+        return this.update(updateWrapper);
     }
 }
 
