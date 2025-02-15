@@ -9,22 +9,21 @@ import org.springframework.web.bind.annotation.*;
  * 查询名称接口
  *
  * @author nx-xn2002
- * @date 2025-01-20
  */
 @RestController
 @RequestMapping("/name")
 public class NameController {
-    @GetMapping("/")
+    @GetMapping("/get")
     public String getNameByGet(String name, HttpServletRequest request) {
-        String accessKey = request.getHeader("accessKey");
-        String secretKey = request.getHeader("secretKey");
-        if (!accessKey.equals("123456") || !secretKey.equals("123456")) {
-            throw new RuntimeException("无权限");
-        }
+//        String accessKey = request.getHeader("accessKey");
+//        String secretKey = request.getHeader("secretKey");
+//        if (!accessKey.equals("123456") || !secretKey.equals("123456")) {
+//            throw new RuntimeException("无权限");
+//        }
         return "GET 你的名字是" + name;
     }
 
-    @PostMapping("/")
+    @PostMapping("/post")
     public String getNameByPost(@RequestParam String name, HttpServletRequest request) {
         String accessKey = request.getHeader("accessKey");
         String secretKey = request.getHeader("secretKey");

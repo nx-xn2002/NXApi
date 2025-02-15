@@ -37,7 +37,7 @@ public class DemoApiClient {
         this.secretKey = secretKey;
     }
 
-    private final static String URL = "http://localhost:8102/api/name/";
+    private final static String URL = "http://localhost:8090/api/name/";
 
     /**
      * get name by get
