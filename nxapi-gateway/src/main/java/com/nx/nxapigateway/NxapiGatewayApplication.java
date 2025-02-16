@@ -1,10 +1,12 @@
 package com.nx.nxapigateway;
 
+import com.nx.nxapi.provider.DemoService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.gateway.route.RouteLocator;
-import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * nxapi gateway application
@@ -12,19 +14,26 @@ import org.springframework.context.annotation.Bean;
  * @author nx-xn2002
  */
 @SpringBootApplication
+@EnableDubbo
+@Slf4j
 public class NxapiGatewayApplication {
+    @DubboReference
+    private DemoService demoService;
 
     public static void main(String[] args) {
-        SpringApplication.run(NxapiGatewayApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(NxapiGatewayApplication.class, args);
+        NxapiGatewayApplication application = context.getBean(NxapiGatewayApplication.class);
+        log.info("启动成功");
+        String nixiang = application.doSayHello("nixiang");
+        log.info("调用结果:{}", nixiang);
     }
 
-    @Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-        return builder.routes()
-                .route("path_route", r -> r.path("/baidu")
-                        .uri("https://cn.bing.com/"))
-                .route("host_route", r -> r.path("/bing")
-                        .uri("https://www.nxcoding.com"))
-                .build();
+    public String doSayHello(String name) {
+        return demoService.sayHello(name);
     }
+
+//    @Bean
+//    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+//        return builder.routes().build();
+//    }
 }

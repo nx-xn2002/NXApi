@@ -20,3 +20,9 @@ logging:
       springframework:
         cloud:
           gateway: trace
+
+dubbo:
+  application:
+    name: dubbo-provider
+  registry:
+    address: nacos://localhost:8848

@@ -1,6 +1,7 @@
 package com.nx.nxapi;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,7 @@ import java.net.UnknownHostException;
 @SpringBootApplication(exclude = {RedisAutoConfiguration.class})
 @MapperScan("com.nx.nxapi.mapper")
 @EnableScheduling
+@EnableDubbo
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @Slf4j
 public class MainApplication {

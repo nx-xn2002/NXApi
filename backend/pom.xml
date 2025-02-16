@@ -9,7 +9,7 @@
         <version>3.3.7</version>
         <relativePath/>
     </parent>
-    <groupId>com.yupi</groupId>
+    <groupId>com.nx</groupId>
     <artifactId>nxapi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>nx-api</name>
@@ -109,6 +109,16 @@
             <groupId>io.github.nx-xn2002</groupId>
             <artifactId>demo-api-sdk</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-nacos-spring-boot-starter</artifactId>
+            <version>3.3.0</version>
         </dependency>
     </dependencies>
 
